@@ -1,4 +1,8 @@
 extends layout
 
 block content
-  main.matchmaker
+  main.match-finder
+    div.match-finder__timer.js-timer.hidden 00:00
+    div.match-finder__average-label Average queue time
+    div.match-finder__average
+    button.match-finder__button(type='button', name='start-match') MATCH ME!
