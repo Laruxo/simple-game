@@ -1,0 +1,25 @@
+{
+  "name": "simple-game",
+  "description": "with NodeJS",
+  "author": "Laurynas Baltrenas",
+  "license": "ISC",
+  "private": true,
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node ./bin/www",
+    "lint": "eslint . ./bin/www",
+    "test": "mocha tests"
+  },
+  "dependencies": {
+    "body-parser": "~1.17.1",
+    "express": "~4.15.2",
+    "pug": "~2.0.0-beta11",
+    "ws": "~2.2.1"
+  },
+  "devDependencies": {
+    "mocha": "~3.2.0",
+    "eslint": "~3.18.0",
+    "eslint-config-google": "~0.7.1"
+  }
+}

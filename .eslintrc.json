@@ -1,0 +1,73 @@
+// https://google.github.io/styleguide/jsguide.html
+{
+  "extends": [
+    "eslint:recommended",
+    "google"
+  ],
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true,
+    "mocha": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 7
+  },
+  "rules": {
+    // Rules that are different from Google style guide
+    "no-cond-assign": "error",
+    "no-console": 0,
+    "block-scoped-var": "error",
+    "no-else-return": "error",
+    "no-floating-decimal": "warn",
+    "no-implicit-coercion": "error",
+    "no-loop-func": "error",
+    "no-unmodified-loop-condition": "error",
+    "no-unused-expressions": "error",
+    "no-useless-escape": "error",
+    "no-useless-return": "error",
+    "no-warning-comments": "warn",
+    "radix": "error",
+    "yoda": "error",
+    "camelcase": ["error", {
+      "properties": "always"
+    }],
+    "consistent-this": ["error"],
+    "func-style": ["error", "declaration"],
+    "indent": ["error", 2, {
+      "SwitchCase": 1
+    }],
+    "keyword-spacing": "error",
+    "max-depth": "warn",
+    "max-len": ["warn", {
+      "code": 100,
+      "tabWidth": 2,
+      "ignoreComments": true,
+      "ignoreUrls": true
+    }],
+    "max-nested-callbacks": ["warn", 4],
+    "max-params": ["warn", 3],
+    "max-statements-per-line": "error",
+    "new-parens": "error",
+    "no-lonely-if": "error",
+    "no-multiple-empty-lines": ["error", {
+      "max": 1
+    }],
+    "no-negated-condition": "error",
+    "no-unneeded-ternary": "error",
+    "operator-assignment": "error",
+    "space-in-parens": "error",
+
+    // ES6
+    "arrow-parens": ["error", "as-needed"],
+    "arrow-spacing": "error",
+    "no-duplicate-imports": ["error", {
+      "includeExports": true
+    }],
+    "no-useless-constructor": "error",
+    "no-useless-rename": "error",
+    "no-var": "error",
+    "prefer-const": "error",
+    "template-curly-spacing": "error"
+  }
+}
