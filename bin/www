@@ -1,25 +1,23 @@
 #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
-const app = require('../app');
 const http = require('http');
+const WebSocket = require('ws');
+const app = require('../app');
+const handleWsConnection = require('../ws');
 
-/**
- * Get port from environment and store in Express.
- */
+// Get port from environment and store in Express.
 const port = normalizePort(process.env.PORT || '8080');
 app.set('port', port);
 
-/**
- * Create HTTP server.
- */
+// Create HTTP server.
 const server = http.createServer(app);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+// Create web socket server
+const wss = new WebSocket.Server({server: server});
+wss.on('connection', handleWsConnection);
+wss.on('error', onError);
+
+// Listen on provided port, on all network interfaces.
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
