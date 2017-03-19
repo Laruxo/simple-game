@@ -1,21 +1,10 @@
 version: '3'
 services:
-  npm:
-    image: node:latest
-    user: node
-    working_dir: /var/www
-    command: npm install
-    volumes:
-      - ./package.json:/var/www/package.json
-      - ./node_modules:/var/www/node_modules
-
   nodejs:
     image: node:latest
     user: node
     working_dir: /var/www
-    command: node ./bin/www
-    depends_on:
-      - npm
+    command: npm -q start
     ports:
       - '8080:8080'
     volumes:
