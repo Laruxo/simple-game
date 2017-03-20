@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+require('dotenv').config();
 
 const http = require('http');
 const WebSocket = require('ws');
 const app = require('../app');
-const handleWsConnection = require('../ws');
 
 // Get port from environment and store in Express.
 const port = normalizePort(process.env.PORT || '8080');
@@ -13,8 +13,8 @@ app.set('port', port);
 const server = http.createServer(app);
 
 // Create web socket server
-const wss = new WebSocket.Server({server: server});
-wss.on('connection', handleWsConnection);
+const wss = new WebSocket.Server({server: server, clientTracking: false});
+wss.on('connection', require('../ws'));
 wss.on('error', onError);
 
 // Listen on provided port, on all network interfaces.
