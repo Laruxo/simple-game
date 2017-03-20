@@ -1,47 +1,44 @@
 const assert = require('assert');
-const MatchMaker = require('../components/MatchMaker');
+const matchmaker = require('../components/MatchMaker');
 
 describe('components/matchmaker.js', function() {
-  let matchmaker;
   const player1 = {
     id: '1',
-    response: function(response) {
+    callback: function(response) {
       assert.deepEqual(response, {type: 'matchFound', url: '/game'});
     },
   };
+
   const player2 = {
     id: '2',
-    response: function(response) {
+    callback: function(response) {
       assert.deepEqual(response, {type: 'matchFound', url: '/game'});
     },
   };
-
-  beforeEach(function() {
-    matchmaker = new MatchMaker();
-  });
-
-  afterEach(function() {
-    matchmaker = null;
-  });
 
   it('should start with empty queue', function() {
     assert.deepEqual(matchmaker.queue, []);
   });
 
   it('should add player to queue', function() {
-    matchmaker.addToQueue(player1);
-    assert.deepEqual(matchmaker.queue, [player1]);
+    matchmaker.addToQueue(player1.id, player1.callback);
+    assert.equal(matchmaker.queue.length, 1);
   });
 
   it('should remove player from queue', function() {
-    matchmaker.addToQueue(player1);
-    matchmaker.removeFromQueue('1');
+    matchmaker.removeFromQueue(player1.id);
     assert.deepEqual(matchmaker.queue, []);
   });
 
   it('should match 2 people who are searching for game', function() {
-    matchmaker.addToQueue(player1);
-    matchmaker.addToQueue(player2);
-    assert.deepEqual(matchmaker.queue, []);
+    matchmaker.addToQueue(player1.id, player1.callback);
+    setTimeout(() => {
+      matchmaker.addToQueue(player2.id, player2.callback);
+      assert.deepEqual(matchmaker.queue, []);
+    }, 2000);
+  });
+
+  it('should format calculated average wait time after matching players', function() {
+    assert(matchmaker.getAverageWait(), '00:01');
   });
 });

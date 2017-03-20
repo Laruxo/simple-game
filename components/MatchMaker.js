@@ -1,5 +1,3 @@
-const events = require('events');
-
 /**
  * MatchMaker class that holds matchmaking queue and matches players
  */
@@ -10,37 +8,52 @@ class MatchMaker {
   constructor() {
     this.queue = [];
     this.averageWait = null;
-
-    this.queueEmmiter = new events.EventEmitter();
-    this.queueEmmiter.on('newPlayer', this._findMatch.bind(this));
   }
 
   /**
-   * Returns formated average wait time in queue
+   * Returns formatted average wait time in queue
    * @return {string}
    */
   getAverageWait() {
     if (this.averageWait) {
       const time = new Date(this.averageWait);
-      return time.getMinutes().toString(10) + ':' + time.getSeconds().toString(10);
+      const min = time.getMinutes();
+      const sec = time.getSeconds();
+
+      let wait = '';
+      if (min < 10) {
+        wait += '0';
+      }
+      wait += min.toString(10);
+
+      wait += ':';
+
+      if (sec < 10) {
+        wait += '0';
+      }
+      wait += sec.toString(10);
+
+      return wait;
     }
 
     return 'N/A';
   }
 
   /**
-   * Adds player to queue
-   * @param {Object} player
-   * @param {string} player.id
-   * @param {Function} player.response
-   * @param {Number} [player.enterTime]
+   * Adds player to queue, calls callback when match is found
+   * @param {string} playerId
+   * @param {Function} callback
    */
-  addToQueue(player) {
-    if (player.hasOwnProperty('id') && player.hasOwnProperty('response')) {
-      player.enterTime = Date.now();
-      this.queue.push(player);
-      this.queueEmmiter.emit('newPlayer');
-    }
+  addToQueue(playerId, callback) {
+    // TODO: could be a class
+    const player = {
+      id: playerId,
+      enterTime: Date.now(),
+      callback: callback,
+    };
+
+    this.queue.push(player);
+    this._findMatch();
   }
 
   /**
@@ -52,6 +65,26 @@ class MatchMaker {
     if (nr !== null) {
       this.queue.splice(nr, 1);
     }
+  }
+
+  /**
+   * Starts a new match
+   * @param {Object} playerA
+   * @param {Object} playerB
+   */
+  newMatch(playerA, playerB) {
+    this.averageWait = MatchMaker.calculateNewWait(
+      this.averageWait,
+      playerA.enterTime,
+      playerB.enterTime
+    );
+
+    const response = {
+      type: 'matchFound',
+      url: '/game',
+    };
+    playerA.callback(response);
+    playerB.callback(response);
   }
 
   /**
@@ -78,12 +111,7 @@ class MatchMaker {
     if (this.queue.length > 1) {
       const playerA = this.queue.shift();
       const playerB = this.queue.shift();
-      this.averageWait = MatchMaker.calculateNewWait(
-        this.averageWait,
-        playerA.enterTime,
-        playerB.enterTime
-      );
-      MatchMaker.newMatch(playerA.response, playerB.response);
+      this.newMatch(playerA, playerB);
     }
   }
 
@@ -103,20 +131,6 @@ class MatchMaker {
 
     return avg;
   }
-
-  /**
-   * Starts a new match
-   * @param {Function} playerA
-   * @param {Function} playerB
-   */
-  static newMatch(playerA, playerB) {
-    const game = {
-      type: 'matchFound',
-      url: '/game',
-    };
-    playerA(game);
-    playerB(game);
-  }
 }
 
-module.exports = MatchMaker;
+module.exports = new MatchMaker();
