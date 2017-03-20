@@ -12,8 +12,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', require('./routes/matchmaker'));
-app.use('/game', require('./routes/game'));
+const session = require('express-session');
+app.use(session({
+  name: 'sid',
+  secret: process.env['SESSION_SECRET'],
+  resave: false,
+  saveUninitialized: true,
+}));
+
+app.use('/', require('./controllers/matchmaker'));
+app.use('/game', require('./controllers/game'));
+app.use('/results', require('./controllers/results'));
 
 // catch 404 and forward to error handler
 app.use(function(request, response, next) {
