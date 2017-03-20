@@ -7,12 +7,28 @@ body {
   display: none;
 }
 
-.match-finder {
+main {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
+}
+
+button,
+.button {
+  box-sizing: content-box;
+  display: inline-block;
+  min-width: 50%;
+  border-radius: 0;
+  border: 0;
+  font-size: 50px;
+  padding: 10px;
+  color: white;
+  background: #2196f3;
+  margin-bottom: 30px;
+  text-decoration: none;
+  text-align: center;
 }
 
 .match-finder__timer {
@@ -37,14 +53,22 @@ body {
   top: 30%;
 }
 
-.match-finder__button {
-  display: inline-block;
-  min-width: 50%;
-  border-radius: 0;
-  border: 0;
+.game__preparation {
   font-size: 50px;
-  padding: 10px;
-  color: white;
-  background: #2196f3;
-  margin-bottom: 30px;
+}
+
+.game__button:not(.hidden) ~ .game__preparation {
+  display: none;
+}
+
+.results__label {
+  font-size: 50px;
+  position: absolute;
+  top: 10%;
+}
+
+.results {
+  font-size: 50px;
+  position: absolute;
+  top: 20%;
 }
