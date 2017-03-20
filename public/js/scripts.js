@@ -1,22 +1,4 @@
 /**
- * Sets or removes cookie
- * @param {string} name
- * @param {string} value
- */
-function setCookie(name, value) {
-  let expires = null;
-  if (typeof value === 'undefined' || value === '') {
-    expires = 'Thu, 01 Jan 1920 00:00:00 GMT';
-    value = '';
-  }
-
-  let cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
-  cookie += expires ? `;expires=${expires.toUTCString()}` : '';
-
-  document.cookie = cookie;
-}
-
-/**
  * Simple timer counting time from 00:00 to infinity and beyond
  */
 class Timer {
@@ -130,7 +112,7 @@ class MatchFinder {
       this.inQueue = true;
       this.timer.start();
 
-      const ws = new WebSocket('ws://' + window.location.host + '/matchmaking/');
+      const ws = new WebSocket('ws://' + window.location.host + '/matchmaking');
       ws.addEventListener('message', this.handleMessage.bind(this));
       ws.addEventListener('open', () => ws.send('joinQueue'));
     }
@@ -142,16 +124,13 @@ class MatchFinder {
    */
   handleMessage(event) {
     const data = JSON.parse(event.data);
-    console.log(data);
 
     if (!data.type) {
       console.log('bad request');
       return;
     }
 
-    if (data.type === 'id' && data.id) {
-      setCookie('playerId', data.id);
-    } else if (data.type === 'matchFound' && data.url) {
+    if (data.type === 'matchFound' && data.url) {
       window.location = data.url;
     } else if (data.type === 'averageWait' && data.time) {
       this.averageWait.innerText = data.time;
