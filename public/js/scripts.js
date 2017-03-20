@@ -142,3 +142,61 @@ const matchfinder = document.querySelector('.match-finder');
 if (matchfinder) {
   new MatchFinder(matchfinder);
 }
+
+/**
+ * Game managing class
+ */
+class Game {
+  /**
+   * @constructor
+   * @param {Element} element
+   */
+  constructor(element) {
+    this.element = element;
+    this.button = element.querySelector('.game__button');
+
+    this.createWebSocket();
+  }
+
+  /**
+   * Creates web socket and attaches its handlers
+   */
+  createWebSocket() {
+    this.ws = new WebSocket('ws://' + window.location.host + '/game');
+    this.ws.addEventListener('message', this.handleMessage.bind(this));
+    this.ws.addEventListener('open', () => this.ws.send('ready'));
+    this.ws.addEventListener('close', () => window.location = '/');
+  }
+
+  /**
+   * Handles message coming over web socket
+   * @param {MessageEvent} event
+   */
+  handleMessage(event) {
+    const data = JSON.parse(event.data);
+
+    if (!data.type) {
+      console.log('bad request');
+      return;
+    }
+
+    if (data.type === 'gameStart') {
+      this.startGame();
+    } else if (data.type === 'gameEnded' && data.url) {
+      window.location = data.url;
+    }
+  }
+
+  /**
+   * Starts game by showing "win" button
+   */
+  startGame() {
+    this.button.classList.remove('hidden');
+    this.button.addEventListener('click', () => this.ws.send('win'));
+  }
+}
+
+const game = document.querySelector('.game');
+if (game) {
+  new Game(game);
+}

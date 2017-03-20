@@ -1,3 +1,5 @@
+const manager = require('./GamesManager');
+
 /**
  * MatchMaker class that holds matchmaking queue and matches players
  */
@@ -85,6 +87,8 @@ class MatchMaker {
     };
     playerA.callback(response);
     playerB.callback(response);
+
+    manager.createGame(playerA.id, playerB.id);
   }
 
   /**
