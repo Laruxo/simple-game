@@ -1,7 +1,7 @@
 const assert = require('assert');
 const manager = require('../components/GamesManager');
 
-describe.only('components/matchmaker.js', function() {
+describe('components/matchmaker.js', function() {
   const player = {ready: false, callback: null, result: null};
 
   it('should start with empty games array and players object', function() {
